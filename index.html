@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ethical Hacking Lab — Algorithms &amp; Commands</title>
+  <style>
+    :root {
+      --bg: #0d1117;
+      --card-bg: #161b22;
+      --border: #30363d;
+      --text: #e6edf3;
+      --text-muted: #8b949e;
+      --accent: #58a6ff;
+      --code-bg: #0d1117;
+      --code-text: #7ee787;
+      --note-border: #f59e0b;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      padding: 2.5rem 1rem;
+    }
+
+    .container {
+      max-width: 840px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      margin-bottom: 2rem;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1 {
+      font-size: 2rem;
+      letter-spacing: 0.04em;
+      margin-bottom: 0.4rem;
+      color: #ffffff;
+    }
+
+    .subtitle {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+    }
+
+    /* Jump Bar */
+    .nav-bar {
+      position: sticky;
+      top: 1rem;
+      z-index: 100;
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin-bottom: 2.5rem;
+      background: rgba(13, 17, 23, 0.95);
+      backdrop-filter: blur(8px);
+      padding: 0.5rem;
+      border-radius: 30px;
+      border: 1px solid var(--border);
+    }
+
+    .nav-link {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.88rem;
+      font-weight: 500;
+      padding: 0.35rem 0.9rem;
+      border-radius: 20px;
+      transition: all 0.2s ease;
+    }
+
+    .nav-link:hover {
+      color: #ffffff;
+      background: var(--card-bg);
+    }
+
+    /* Experiment Card */
+    .experiment-card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 2rem;
+      margin-bottom: 2.5rem;
+      scroll-margin-top: 5rem;
+    }
+
+    .experiment-title {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--accent);
+      margin-bottom: 1.5rem;
+      line-height: 1.4;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    /* Step Items */
+    .step-item {
+      margin-bottom: 1.25rem;
+    }
+
+    .step-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .step-label {
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 0.35rem;
+      font-size: 0.98rem;
+    }
+
+    .or-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      font-style: italic;
+      margin: 0.5rem 0 0.35rem 0.5rem;
+    }
+
+    /* Code Box */
+    .code-box {
+      background: var(--code-bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 0.75rem 1rem;
+      margin: 0.35rem 0 0.5rem 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    pre, code {
+      font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+      font-size: 0.92rem;
+    }
+
+    .code-text {
+      color: var(--code-text);
+      word-break: break-all;
+      white-space: pre-wrap;
+    }
+
+    .copy-btn {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 0.25rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      flex-shrink: 0;
+    }
+
+    .copy-btn:hover {
+      color: #ffffff;
+      border-color: var(--accent);
+      background: var(--card-bg);
+    }
+
+    /* Result & Notes */
+    .result-box {
+      margin-top: 1.5rem;
+      padding: 0.85rem 1rem;
+      background: rgba(88, 166, 255, 0.08);
+      border-left: 4px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      font-size: 0.95rem;
+    }
+
+    .result-box strong {
+      color: #ffffff;
+    }
+
+    .note-box {
+      margin-top: 1rem;
+      padding: 0.85rem 1rem;
+      background: rgba(245, 158, 11, 0.08);
+      border-left: 4px solid var(--note-border);
+      border-radius: 0 6px 6px 0;
+      font-size: 0.9rem;
+      color: #e5e7eb;
+    }
+
+    .note-box strong {
+      color: #fbbf24;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 1.5rem;
+      right: 1.5rem;
+      background: #238636;
+      color: #ffffff;
+      padding: 0.5rem 1rem;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 500;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.25s ease;
+      pointer-events: none;
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* Print */
+    @media print {
+      body {
+        background: #ffffff;
+        color: #000000;
+        padding: 0;
+      }
+      .nav-bar, .copy-btn {
+        display: none !important;
+      }
+      .experiment-card {
+        background: #ffffff;
+        border: 1px solid #cccccc;
+        page-break-inside: avoid;
+        margin-bottom: 2rem;
+        padding: 1.5rem;
+      }
+      .experiment-title {
+        color: #000000;
+      }
+      .code-box {
+        background: #f6f8fa;
+        border: 1px solid #d0d7de;
+      }
+      .code-text {
+        color: #24292f;
+      }
+      .result-box, .note-box {
+        background: #f6f8fa;
+        border-left: 4px solid #000000;
+        color: #000000;
+      }
+      .result-box strong, .note-box strong {
+        color: #000000;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+
+    <header>
+      <h1>ETHICAL HACKING LAB</h1>
+      <div class="subtitle">Simple English Algorithms with Commands</div>
+    </header>
+
+    <!-- Quick Jump Navigation -->
+    <nav class="nav-bar">
+      <a href="#exp1" class="nav-link">Experiment 1</a>
+      <a href="#exp2" class="nav-link">Experiment 2</a>
+      <a href="#exp3" class="nav-link">Experiment 3</a>
+      <a href="#exp4" class="nav-link">Experiment 4</a>
+    </nav>
+
+    <!-- EXPERIMENT 1 -->
+    <section id="exp1" class="experiment-card">
+      <h2 class="experiment-title">Experiment 1: Application Penetration Testing for Network Footprinting (Reconnaissance) and Vulnerability Assessment</h2>
+
+      <div class="step-item">
+        <div class="step-label">Step 1: Start the terminal.</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 2: Check the host information.</div>
+        <div class="code-box">
+          <code class="code-text">host google.com</code>
+          <button class="copy-btn" onclick="copyCode('host google.com')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 3: Trace the network path.</div>
+        <div class="code-box">
+          <code class="code-text">traceroute google.com</code>
+          <button class="copy-btn" onclick="copyCode('traceroute google.com')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 4: Display network interface information.</div>
+        <div class="code-box">
+          <code class="code-text">ifconfig</code>
+          <button class="copy-btn" onclick="copyCode('ifconfig')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 5: Find domain registration information.</div>
+        <div class="code-box">
+          <code class="code-text">whois google.com</code>
+          <button class="copy-btn" onclick="copyCode('whois google.com')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 6: Collect information about the target domain.</div>
+        <div class="code-box">
+          <code class="code-text">theHarvester -d google.com -b google</code>
+          <button class="copy-btn" onclick="copyCode('theHarvester -d google.com -b google')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 7: Scan the target for services and vulnerabilities.</div>
+        <div class="code-box">
+          <code class="code-text">nmap -A -T4 142.251.220.110</code>
+          <button class="copy-btn" onclick="copyCode('nmap -A -T4 142.251.220.110')">Copy</button>
+        </div>
+        <div class="or-label">Or use:</div>
+        <div class="code-box">
+          <code class="code-text">nmap -F 142.251.110.220</code>
+          <button class="copy-btn" onclick="copyCode('nmap -F 142.251.110.220')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 8: Check the web server for known vulnerabilities.</div>
+        <div class="code-box">
+          <code class="code-text">nikto -h https://www.google.com</code>
+          <button class="copy-btn" onclick="copyCode('nikto -h https://www.google.com')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 9: Observe and analyse the results.</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 10: Stop.</div>
+      </div>
+
+      <div class="result-box">
+        <strong>Result:</strong> Network information and possible vulnerabilities are identified.
+      </div>
+
+      <div class="note-box">
+        <strong>Note:</strong> Perform scans only on systems and domains for which you have permission. The commands are reproduced from the supplied lab document.
+      </div>
+    </section>
+
+    <!-- EXPERIMENT 2 -->
+    <section id="exp2" class="experiment-card">
+      <h2 class="experiment-title">Experiment 2: Test for Configuration and Deployment</h2>
+
+      <div class="step-item">
+        <div class="step-label">Step 1: Start the terminal.</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 2: Check the website response.</div>
+        <div class="code-box">
+          <code class="code-text">curl -s http://www.google.com</code>
+          <button class="copy-btn" onclick="copyCode('curl -s http://www.google.com')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 3: Check the website header information.</div>
+        <div class="code-box">
+          <code class="code-text">curl -I http://www.google.com</code>
+          <button class="copy-btn" onclick="copyCode('curl -I http://www.google.com')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 4: Update the package list and install OWASP ZAP.</div>
+        <div class="code-box">
+          <code class="code-text">sudo apt update &amp;&amp; sudo apt install zaproxy</code>
+          <button class="copy-btn" onclick="copyCode('sudo apt update &amp;&amp; sudo apt install zaproxy')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 5: Check the OWASP ZAP help information.</div>
+        <div class="code-box">
+          <code class="code-text">OWASP ZAP -h</code>
+          <button class="copy-btn" onclick="copyCode('OWASP ZAP -h')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 6: Check the ZAP command-line help.</div>
+        <div class="code-box">
+          <code class="code-text">zaproxy -h</code>
+          <button class="copy-btn" onclick="copyCode('zaproxy -h')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 7: Check the WPScan version.</div>
+        <div class="code-box">
+          <code class="code-text">wpscan --version</code>
+          <button class="copy-btn" onclick="copyCode('wpscan --version')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 8: Use the scanning tools to check the configuration and deployment of an authorised test website.</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 9: Observe and analyse the results.</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 10: Stop.</div>
+      </div>
+
+      <div class="result-box">
+        <strong>Result:</strong> Configuration and deployment weaknesses are checked using security scanning tools.
+      </div>
+
+      <div class="note-box">
+        <strong>Note:</strong> The OWASP ZAP help command is shown as written in the previous algorithm; the supplied document also lists zaproxy -h.
+      </div>
+    </section>
+
+    <!-- EXPERIMENT 3 -->
+    <section id="exp3" class="experiment-card">
+      <h2 class="experiment-title">Experiment 3: Enumerate Infrastructure and Application Admin Interface</h2>
+
+      <div class="step-item">
+        <div class="step-label">Step 1: Start the terminal.</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 2: Download the Recon-ng tool from GitHub.</div>
+        <div class="code-box">
+          <code class="code-text">git clone https://github.com/lanmaster53/recon-ng</code>
+          <button class="copy-btn" onclick="copyCode('git clone https://github.com/lanmaster53/recon-ng')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 3: Open Recon-ng.</div>
+        <div class="code-box">
+          <code class="code-text">recon-ng</code>
+          <button class="copy-btn" onclick="copyCode('recon-ng')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 4: Check the available workspaces.</div>
+        <div class="code-box">
+          <code class="code-text">workspaces</code>
+          <button class="copy-btn" onclick="copyCode('workspaces')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 5: Search for available modules.</div>
+        <div class="code-box">
+          <code class="code-text">marketplace search</code>
+          <button class="copy-btn" onclick="copyCode('marketplace search')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 6: Install the required module.</div>
+        <div class="code-box">
+          <code class="code-text">marketplace install recon/companies-domains/viewdns_reverse_whois</code>
+          <button class="copy-btn" onclick="copyCode('marketplace install recon/companies-domains/viewdns_reverse_whois')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 7: Load the module.</div>
+        <div class="code-box">
+          <code class="code-text">modules load recon/companies-domains/viewdns_reverse_whois</code>
+          <button class="copy-btn" onclick="copyCode('modules load recon/companies-domains/viewdns_reverse_whois')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 8: Set the target domain.</div>
+        <div class="code-box">
+          <code class="code-text">options set SOURCE google.com</code>
+          <button class="copy-btn" onclick="copyCode('options set SOURCE google.com')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 9: Run the module.</div>
+        <div class="code-box">
+          <code class="code-text">run</code>
+          <button class="copy-btn" onclick="copyCode('run')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 10: Display the discovered host information.</div>
+        <div class="code-box">
+          <code class="code-text">show hosts</code>
+          <button class="copy-btn" onclick="copyCode('show hosts')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 11: Open the OWASP Juice Shop website.</div>
+        <div class="code-box">
+          <code class="code-text">https://demo.owasp-juice.shop</code>
+          <button class="copy-btn" onclick="copyCode('https://demo.owasp-juice.shop')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 12: Check the application users endpoint.</div>
+        <div class="code-box">
+          <code class="code-text">curl -i -X POST http://demo.owasp-juice.shop/api/Users/</code>
+          <button class="copy-btn" onclick="copyCode('curl -i -X POST http://demo.owasp-juice.shop/api/Users/')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 13: Check the current user information.</div>
+        <div class="code-box">
+          <code class="code-text">curl -i http://demo.owasp-juice.shop/rest/user/whoami</code>
+          <button class="copy-btn" onclick="copyCode('curl -i http://demo.owasp-juice.shop/rest/user/whoami')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 14: Check the login endpoint.</div>
+        <div class="code-box">
+          <code class="code-text">curl -i -X POST http://demo.owasp-juice.shop/rest/user/login</code>
+          <button class="copy-btn" onclick="copyCode('curl -i -X POST http://demo.owasp-juice.shop/rest/user/login')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 15: Check the registration page.</div>
+        <div class="code-box">
+          <code class="code-text">curl -i demo.owasp-juice.shop/#/register</code>
+          <button class="copy-btn" onclick="copyCode('curl -i demo.owasp-juice.shop/#/register')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 16: Exit the terminal process.</div>
+        <div class="code-box">
+          <code class="code-text">exit</code>
+          <button class="copy-btn" onclick="copyCode('exit')">Copy</button>
+        </div>
+      </div>
+
+      <div class="result-box">
+        <strong>Result:</strong> Infrastructure and application information is collected and analysed.
+      </div>
+
+      <div class="note-box">
+        <strong>Note:</strong> Use authorised test environments. The OWASP Juice Shop demo is intended for security practice.
+      </div>
+    </section>
+
+    <!-- EXPERIMENT 4 -->
+    <section id="exp4" class="experiment-card">
+      <h2 class="experiment-title">Experiment 4: Authentication and Authorization Testing</h2>
+
+      <div class="step-item">
+        <div class="step-label">Step 1: Start the terminal.</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 2: Open the John the Ripper tool.</div>
+        <div class="code-box">
+          <code class="code-text">john</code>
+          <button class="copy-btn" onclick="copyCode('john')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 3: Generate an MD5 password hash.</div>
+        <div class="code-box">
+          <code class="code-text">openssl passwd -1 password123</code>
+          <button class="copy-btn" onclick="copyCode('openssl passwd -1 password123')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 4: Create a file to store the hash.</div>
+        <div class="code-box">
+          <code class="code-text">nano hash.txt</code>
+          <button class="copy-btn" onclick="copyCode('nano hash.txt')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 5: Save the generated hash inside the file and close it.</div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 6: Crack the hash using John the Ripper.</div>
+        <div class="code-box">
+          <code class="code-text">john --format=md5crypt hash.txt</code>
+          <button class="copy-btn" onclick="copyCode('john --format=md5crypt hash.txt')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 7: Display the cracked password.</div>
+        <div class="code-box">
+          <code class="code-text">john --show hash.txt</code>
+          <button class="copy-btn" onclick="copyCode('john --show hash.txt')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 8: Check the available wordlists.</div>
+        <div class="code-box">
+          <code class="code-text">ls /usr/share/wordlists/</code>
+          <button class="copy-btn" onclick="copyCode('ls /usr/share/wordlists/')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 9: Extract the RockYou wordlist.</div>
+        <div class="code-box">
+          <code class="code-text">sudo gzip -dk /usr/share/wordlists/rockyou.txt.gz</code>
+          <button class="copy-btn" onclick="copyCode('sudo gzip -dk /usr/share/wordlists/rockyou.txt.gz')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 10: Crack the hash using the RockYou wordlist.</div>
+        <div class="code-box">
+          <code class="code-text">john --format=md5crypt --wordlist=/usr/share/wordlists/rockyou.txt hash.txt</code>
+          <button class="copy-btn" onclick="copyCode('john --format=md5crypt --wordlist=/usr/share/wordlists/rockyou.txt hash.txt')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 11: Display the password result.</div>
+        <div class="code-box">
+          <code class="code-text">john --show hash.txt</code>
+          <button class="copy-btn" onclick="copyCode('john --show hash.txt')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 12: Enable and start the SSH service on the authorised lab machine.</div>
+        <div class="code-box">
+          <code class="code-text">sudo systemctl enable --now ssh</code>
+          <button class="copy-btn" onclick="copyCode('sudo systemctl enable --now ssh')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 13: Check the SSH service status.</div>
+        <div class="code-box">
+          <code class="code-text">sudo systemctl status ssh</code>
+          <button class="copy-btn" onclick="copyCode('sudo systemctl status ssh')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 14: Display the IP address.</div>
+        <div class="code-box">
+          <code class="code-text">ip addr</code>
+          <button class="copy-btn" onclick="copyCode('ip addr')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 15: Create a password list.</div>
+        <div class="code-box">
+          <code class="code-text">nano passwords.txt</code>
+          <button class="copy-btn" onclick="copyCode('nano passwords.txt')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 16: Enter the following passwords into the file.</div>
+        <div class="code-box">
+          <pre class="code-text">password
+studentpassword123
+letmein
+123456</pre>
+          <button class="copy-btn" onclick="copyCode('password\nstudentpassword123\nletmein\n123456')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 17: Check the SSH service version on the lab machine.</div>
+        <div class="code-box">
+          <code class="code-text">nmap -sV -p 22 172.20.11.33</code>
+          <button class="copy-btn" onclick="copyCode('nmap -sV -p 22 172.20.11.33')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 18: Test the lab SSH account against the password list. Use only an account and machine you are authorised to test.</div>
+        <div class="code-box">
+          <code class="code-text">hydra -l student -P passwords.txt ssh://172.20.11.33 -t 4</code>
+          <button class="copy-btn" onclick="copyCode('hydra -l student -P passwords.txt ssh://172.20.11.33 -t 4')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 19: Connect to the SSH machine.</div>
+        <div class="code-box">
+          <code class="code-text">ssh student@172.20.11.33</code>
+          <button class="copy-btn" onclick="copyCode('ssh student@172.20.11.33')">Copy</button>
+        </div>
+      </div>
+
+      <div class="step-item">
+        <div class="step-label">Step 20: Exit the SSH connection.</div>
+        <div class="code-box">
+          <code class="code-text">exit</code>
+          <button class="copy-btn" onclick="copyCode('exit')">Copy</button>
+        </div>
+      </div>
+
+      <div class="result-box">
+        <strong>Result:</strong> Authentication and authorization weaknesses are tested, and password security is analysed.
+      </div>
+
+      <div class="note-box">
+        <strong>Safety note:</strong> Password auditing and SSH login testing must be limited to your own lab accounts or systems for which you have explicit permission.
+      </div>
+    </section>
+
+  </div>
+
+  <div class="toast" id="toast">Copied to clipboard</div>
+
+  <script>
+    function copyCode(text) {
+      navigator.clipboard.writeText(text).then(() => {
+        showToast();
+      }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = text;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        document.body.removeChild(ta);
+        showToast();
+      });
+    }
+
+    function showToast() {
+      const toast = document.getElementById('toast');
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 1500);
+    }
+  </script>
+</body>
+</html>
